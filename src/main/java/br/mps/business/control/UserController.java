@@ -1,16 +1,20 @@
 package br.mps.business.control;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import br.mps.business.model.User;
 import br.mps.infra.Validator;
 
 public class UserController{
-    public UserController(){
-    
+    Map<String,String> users;
+
+    public UserController(Map<String,String> users){
+        this.users = users;
     }
 
-    public static void createUser(){
+    public void createUser(){
         User newUser;
         Validator validator;
 
@@ -34,6 +38,7 @@ public class UserController{
         }
 
         newUser = new User(login, senha);
+        users.put(login, new String(senha));
 
         System.out.println("Usuario criado com sucesso");
     }

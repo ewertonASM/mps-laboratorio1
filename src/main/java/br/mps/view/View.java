@@ -1,5 +1,7 @@
 package br.mps.view;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import br.mps.business.control.UserController;
@@ -9,9 +11,10 @@ public class View{
 
     }
 
-    public void run(){
+    public void run() {
         Scanner scan = new Scanner(System.in);
-        UserController controller = new UserController();
+        Map<String,String> users = new HashMap<String,String>();
+        UserController controller = new UserController(users);
 
         System.out.println("Digite 1 para criar um novo usuario");
         System.out.println("Digite 0 para sair");
