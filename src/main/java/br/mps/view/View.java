@@ -16,8 +16,9 @@ public class View{
         Map<String,String> users = new HashMap<String,String>();
         UserController controller = new UserController(users);
 
-        System.out.println("Digite 1 para criar um novo usuario");
         System.out.println("Digite 0 para sair");
+        System.out.println("Digite 1 para criar um novo usuario");
+        System.out.println("Digite 2 para listar os usuarios");
         System.out.println("Digite 3 para deletar um usuario");
 
         String num = scan.nextLine();
@@ -28,6 +29,13 @@ public class View{
                     System.exit(0);
                 case "1":
                     controller.createUser();
+                    num = scan.nextLine();
+                    break;
+                case "2":
+                    System.out.print("Lista de usuarios:\n");
+                    for (String nome : users.keySet()) { 
+                        System.out.print(nome + "\n"); 
+                    }
                     num = scan.nextLine();
                     break;
                 case "3":
