@@ -1,4 +1,9 @@
+package br.mps.business.control;
+
 import java.util.Scanner;
+
+import br.mps.business.model.User;
+import br.mps.infra.Validator;
 
 public class UserController{
     public UserController(){

@@ -1,4 +1,8 @@
+package br.mps.view;
+
 import java.util.Scanner;
+
+import br.mps.business.control.UserController;
 
 public class View{
     public View(){

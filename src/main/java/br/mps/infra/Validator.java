@@ -1,3 +1,5 @@
+package br.mps.infra;
+
 public class Validator{
     public Validator(){
 

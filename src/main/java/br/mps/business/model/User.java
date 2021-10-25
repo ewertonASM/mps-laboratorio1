@@ -1,3 +1,5 @@
+package br.mps.business.model;
+
 public class User{
     private String login;
     private String senha;
