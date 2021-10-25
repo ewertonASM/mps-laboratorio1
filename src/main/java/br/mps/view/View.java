@@ -18,6 +18,8 @@ public class View{
 
         System.out.println("Digite 1 para criar um novo usuario");
         System.out.println("Digite 0 para sair");
+        System.out.println("Digite 3 para deletar um usuario");
+
         String num = scan.nextLine();
         
         while(true){
@@ -26,6 +28,12 @@ public class View{
                     System.exit(0);
                 case "1":
                     controller.createUser();
+                    num = scan.nextLine();
+                    break;
+                case "3":
+                    System.out.println("Digite o nome do usuário a ser deletado: ");
+                    String name = scan.nextLine();
+                    controller.deleteUser(users, name);
                     num = scan.nextLine();
                     break;
                 default:

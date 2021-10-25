@@ -2,6 +2,7 @@ package br.mps.business.control;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.Scanner;
 
 import br.mps.business.model.User;
@@ -41,5 +42,14 @@ public class UserController{
         users.put(login, new String(senha));
 
         System.out.println("Usuario criado com sucesso");
+    }
+
+    public void deleteUser(Map<String, String> userList, String name){
+        String user = userList.get(name);
+        
+        if (user != null) {
+            userList.remove(name);
+            System.out.println("Usuario deletado com sucesso");
+        }
     }
 }
