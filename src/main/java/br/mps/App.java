@@ -1,14 +1,7 @@
-package br.mps;
+public class app{
+    public static void main(String[] args){
+        View app = new View();
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+        app.run();
     }
 }
-
