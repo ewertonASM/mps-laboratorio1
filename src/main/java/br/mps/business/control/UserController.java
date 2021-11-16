@@ -1,35 +1,56 @@
+package br.mps.business.control;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 import java.util.Scanner;
 
+import br.mps.business.model.User;
+import br.mps.infra.Validator;
+import br.mps.view.View;
+
 public class UserController{
-    public UserController(){
-    
+    Map<String,String> users;
+    View view;
+
+    public UserController(Map<String,String> users, View view){
+        this.users = users;
+        this.view = view;
     }
 
-    public static void createUser(){
-        User newUser;
+    public void createUser(){
         Validator validator;
 
         Scanner scan = new Scanner(System.in);
         validator = new Validator();
 
-        System.out.println("Digite o login do novo usuario:");
+        view.perguntaLogin();
         String login = scan.nextLine();
-
+        
         if(!validator.validaLogin(login)){
-            System.out.println("Login invalido!");
+            view.loginInvalido();
             return;
         }
 
-        System.out.println("Digite a senha do novo usuario:");
+        view.perguntaSenha();
         String senha = scan.nextLine();
 
         if(!validator.validaSenha(senha)){
-            System.out.println("Senha invalida!");
+            view.senhaInvalida();
             return;
         }
+          
+        users.put(login, new String(senha));
 
-        newUser = new User(login, senha);
+        view.userCriado();
+    }
 
-        System.out.println("Usuario criado com sucesso");
+    public void deleteUser(Map<String, String> userList, String name){
+        String user = userList.get(name);
+        
+        if (user != null) {
+            userList.remove(name);
+            view.userDeletado();
+        }
     }
 }
