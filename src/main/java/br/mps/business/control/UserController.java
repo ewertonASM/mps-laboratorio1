@@ -7,41 +7,43 @@ import java.util.Scanner;
 
 import br.mps.business.model.User;
 import br.mps.infra.Validator;
+import br.mps.view.View;
 
 public class UserController{
     Map<String,String> users;
+    View view;
 
-    public UserController(Map<String,String> users){
+    public UserController(Map<String,String> users, View view){
         this.users = users;
+        this.view = view;
     }
 
     public void createUser(){
-        User newUser;
         Validator validator;
 
         Scanner scan = new Scanner(System.in);
         validator = new Validator();
 
-        System.out.println("Digite o login do novo usuario:");
+        view.perguntaLogin();
         String login = scan.nextLine();
-
+        
         if(!validator.validaLogin(login)){
-            System.out.println("Login invalido!");
+            view.loginInvalido();
             return;
         }
 
-        System.out.println("Digite a senha do novo usuario:");
+        view.perguntaSenha();
         String senha = scan.nextLine();
 
         if(!validator.validaSenha(senha)){
-            System.out.println("Senha invalida!");
+            view.senhaInvalida();
             return;
         }
-
-        newUser = new User(login, senha);
+          
         users.put(login, new String(senha));
 
-        System.out.println("Usuario criado com sucesso");
+
+        view.userCriado();
     }
 
     public void deleteUser(Map<String, String> userList, String name){
@@ -49,7 +51,16 @@ public class UserController{
         
         if (user != null) {
             userList.remove(name);
-            System.out.println("Usuario deletado com sucesso");
+            view.userDeletado();
         }
     }
+
+    // public void deleteUser(Map<String, String> userList, String name){
+    //     String user = userList.get(name);
+        
+    //     if (user != null) {
+    //         userList.remove(name);
+    //         System.out.println("Usuario deletado com sucesso");
+    //     }
+    // }
 }
