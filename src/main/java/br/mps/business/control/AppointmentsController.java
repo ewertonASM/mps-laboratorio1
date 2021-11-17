@@ -17,7 +17,7 @@ public class AppointmentsController {
     public void createAppointment(String userName, String appointmentName, LocalDate date){
         
         for(Appointment appointment : appointments){
-            if(date.isEqual(appointment.getDate())){
+            if(checkDate(date, appointment.getDate())){
                 view.dateUnavaliable();
                 return;
             }
@@ -38,7 +38,7 @@ public class AppointmentsController {
 
     public void updateAppointment(LocalDate oldDate, LocalDate newDate){
         for(Appointment appointment : appointments){
-            if(oldDate.isEqual(appointment.getDate())){
+            if(checkDate(oldDate, appointment.getDate())){
                 appointment.changeDate(newDate);
             }
         }
@@ -47,7 +47,7 @@ public class AppointmentsController {
     public void deleteAppointment(LocalDate date){
 
         for(Appointment appointment : appointments){
-            if(date.isEqual(appointment.getDate())){
+            if(checkDate(date, appointment.getDate())){
                 appointments.remove(appointment);
                 view.appointmentDeleted();
                 return;
@@ -55,5 +55,13 @@ public class AppointmentsController {
         }
 
         view.appointmentNotFound();
+    }
+
+    private boolean checkDate(LocalDate date1, LocalDate date2){
+        if(date1.isEqual(date2)){
+            return true;
+        } else{
+            return false;
+        }
     }
 }
