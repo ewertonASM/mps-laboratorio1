@@ -1,18 +1,22 @@
 package br.mps.business.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Appointment {
     int id;
     String userName;
     String appointmentName;
-    Date date;
+    LocalDate date;
 
-    public Appointment(int id, String userName, String appointmentName, Date date){
+    public Appointment(int id, String userName, String appointmentName, LocalDate date){
         this.id = id;
         this.userName = userName;
         this.appointmentName = appointmentName;
         this.date = date;
+    }
+
+    public int getId(){
+        return id;
     }
 
     public String getUserName(){
@@ -23,7 +27,11 @@ public class Appointment {
         return appointmentName;
     }
 
-    public Date getDate(){
+    public LocalDate getDate(){
         return date;
+    }
+
+    public void changeDate(LocalDate date){
+        this.date = date;
     }
 }

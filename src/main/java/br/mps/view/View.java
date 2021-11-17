@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 import br.mps.business.control.UserController;
@@ -48,8 +49,26 @@ public class View{
                     num = scan.nextLine();
                     break;
                 case "4":
-                    System.out.println("Criar agendamento:");
-                    criarAgendamento();
+                    criarAgendamento(aptController);
+                    num = scan.nextLine();
+                    break;
+                case "5":
+                    aptController.listAppointments();
+                    num = scan.nextLine();
+                    break;
+                case "6":
+                    System.out.println("Digite a data do agendamento que deseja alterar");
+                    LocalDate oldDate = perguntaData(scan);
+                    System.out.println("Digite a nova data do agendamento");
+                    LocalDate newDate = perguntaData(scan);
+                    aptController.updateAppointment(oldDate, newDate);
+                    num = scan.nextLine();
+                    break;
+                case "7":
+                    System.out.println("Digite a data que deseja excluir o agendamento");
+                    LocalDate date = perguntaData(scan);
+                    aptController.deleteAppointment(date);
+                    num = scan.nextLine();
                     break;
                 default:
                     System.out.println("Comando invalido, tente novamente");
@@ -66,9 +85,12 @@ public class View{
         System.out.println("Digite 2 para listar os usuarios");
         System.out.println("Digite 3 para deletar um usuario");
         System.out.println("Digite 4 para criar novo agendamento");
+        System.out.println("Digite 5 para listar agendamentos");
+        System.out.println("Digite 6 para alterar a data de um agendamento");
+        System.out.println("Digite 7 para deletar um agendamento");
     }
 
-    public void criarAgendamento(){
+    public void criarAgendamento(AppointmentsController aptController){
         Scanner scan = new Scanner(System.in);
 
         System.out.println("Digite o nome do usuario que quer criar o agendamento");
@@ -77,6 +99,12 @@ public class View{
         System.out.println("Digite o nome do agendamento");
         String appointmentName = scan.nextLine();
 
+        LocalDate date = perguntaData(scan);
+
+        aptController.createAppointment(name, appointmentName, date);
+    }
+
+    public LocalDate perguntaData(Scanner scan){
         System.out.println("Digite o dia do agendamento");
         String day = scan.nextLine();
 
@@ -88,7 +116,15 @@ public class View{
 
         LocalDate date = LocalDate.parse(year + "-" + month + "-" + day);
 
-        
+        return date;
+    }
+
+    public void printAppointment(Appointment appointment){
+        System.out.println("Id:" + appointment.getId());
+        System.out.println("Nome do usuario:" + appointment.getUserName());
+        System.out.println("Nome do agendamento:" + appointment.getAppointmentName());
+        System.out.println("Data do agendamento:" + appointment.getDate());
+        System.out.println("//////////////////////////////////////////////////////////");
     }
 
     public void perguntaLogin(){

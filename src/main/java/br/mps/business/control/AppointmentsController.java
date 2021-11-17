@@ -1,6 +1,6 @@
 package br.mps.business.control;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import br.mps.view.View;
 import br.mps.business.model.Appointment;
@@ -14,10 +14,10 @@ public class AppointmentsController {
         this.view = view;
     }
 
-    public void createAppointment(String userName, String appointmentName, Date date){
+    public void createAppointment(String userName, String appointmentName, LocalDate date){
         
         for(Appointment appointment : appointments){
-            if(date == appointment.getDate()){
+            if(date.isEqual(appointment.getDate())){
                 view.dateUnavaliable();
                 return;
             }
@@ -30,10 +30,24 @@ public class AppointmentsController {
         view.appointmentCreated();
     }
 
-    public void deleteAppointment(Date date){
+    public void listAppointments(){
+        for(Appointment appointment : appointments){
+            view.printAppointment(appointment);
+        }
+    }
+
+    public void updateAppointment(LocalDate oldDate, LocalDate newDate){
+        for(Appointment appointment : appointments){
+            if(oldDate.isEqual(appointment.getDate())){
+                appointment.changeDate(newDate);
+            }
+        }
+    }
+
+    public void deleteAppointment(LocalDate date){
 
         for(Appointment appointment : appointments){
-            if(date == appointment.getDate()){
+            if(date.isEqual(appointment.getDate())){
                 appointments.remove(appointment);
                 view.appointmentDeleted();
                 return;
