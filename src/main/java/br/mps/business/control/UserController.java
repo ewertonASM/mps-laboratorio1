@@ -42,7 +42,6 @@ public class UserController{
           
         users.put(login, new String(senha));
 
-
         view.userCriado();
     }
 
@@ -54,13 +53,4 @@ public class UserController{
             view.userDeletado();
         }
     }
-
-    // public void deleteUser(Map<String, String> userList, String name){
-    //     String user = userList.get(name);
-        
-    //     if (user != null) {
-    //         userList.remove(name);
-    //         System.out.println("Usuario deletado com sucesso");
-    //     }
-    // }
 }
