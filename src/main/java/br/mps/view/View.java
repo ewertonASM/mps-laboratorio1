@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 import br.mps.business.control.UserController;
 import br.mps.business.control.AppointmentsController;
+import br.mps.business.control.EstablishmentController;
 import br.mps.business.model.Appointment;
+import br.mps.business.model.Establishment;
 
 public class View{
     public View(){
@@ -20,9 +21,11 @@ public class View{
         Scanner scan = new Scanner(System.in);
         Map<String,String> users = new HashMap<String,String>();
         ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+        ArrayList<Establishment> establishments = new ArrayList<Establishment>();
 
         UserController controller = new UserController(users, this);
         AppointmentsController aptController = new AppointmentsController(appointments, this);
+        EstablishmentController estController = new EstablishmentController(establishments, this);
         
         menu();
         String num = scan.nextLine();
@@ -49,7 +52,7 @@ public class View{
                     num = scan.nextLine();
                     break;
                 case "4":
-                    criarAgendamento(aptController);
+                    criarAgendamento(aptController, scan);
                     num = scan.nextLine();
                     break;
                 case "5":
@@ -70,6 +73,24 @@ public class View{
                     aptController.deleteAppointment(date);
                     num = scan.nextLine();
                     break;
+                case "8":
+                    cadastrarEstabelecimento(estController, scan);
+                    num = scan.nextLine();
+                    break;
+                case "9":
+                    estController.listEstablishments();
+                    num = scan.nextLine();
+                    break;
+                case "10":
+                    atualizaNome(estController, scan);
+                    num = scan.nextLine();
+                    break;
+                case "11":
+                    System.out.println("Digite o nome do estabelecimento que voce deseja deletar");
+                    String n = scan.nextLine();
+                    estController.deleteEstablishment(n);
+                    num = scan.nextLine();
+                    break;
                 default:
                     System.out.println("Comando invalido, tente novamente");
                     menu();
@@ -87,11 +108,14 @@ public class View{
         System.out.println("Digite 4 para criar novo agendamento");
         System.out.println("Digite 5 para listar agendamentos");
         System.out.println("Digite 6 para alterar a data de um agendamento");
-        System.out.println("Digite 7 para deletar um agendamento");
+        System.out.println("Digite 7 para deletar os agendamento");
+        System.out.println("Digite 8 para cadastrar um estabelecimento");
+        System.out.println("Digite 9 para listar os estabelecimentos");
+        System.out.println("Digite 10 para alterar o nome de um estabelecimento");
+        System.out.println("Digite 11 para deletar um estabelecimento");
     }
 
-    public void criarAgendamento(AppointmentsController aptController){
-        Scanner scan = new Scanner(System.in);
+    public void criarAgendamento(AppointmentsController aptController, Scanner scan){
 
         System.out.println("Digite o nome do usuario que quer criar o agendamento");
         String name = scan.nextLine();
@@ -102,6 +126,17 @@ public class View{
         LocalDate date = perguntaData(scan);
 
         aptController.createAppointment(name, appointmentName, date);
+    }
+
+    public void cadastrarEstabelecimento(EstablishmentController estController, Scanner scan){
+
+        System.out.println("Digite o nome do estabelecimento");
+        String name = scan.nextLine();
+
+        System.out.println("Digite o nome do dono do estabelecimento");
+        String owner = scan.nextLine();
+
+        estController.createEstablishment(name, owner);
     }
 
     public LocalDate perguntaData(Scanner scan){
@@ -119,11 +154,26 @@ public class View{
         return date;
     }
 
+    public void atualizaNome(EstablishmentController estController, Scanner scan){
+        System.out.println("Digite o nome atual do estabelecimento");
+        String oldName = scan.nextLine();
+        
+        System.out.println("Digite o novo nome do estabelecimento");
+        String newName = scan.nextLine();
+
+        estController.changeName(oldName, newName);
+    }
+
     public void printAppointment(Appointment appointment){
-        System.out.println("Id:" + appointment.getId());
         System.out.println("Nome do usuario:" + appointment.getUserName());
         System.out.println("Nome do agendamento:" + appointment.getAppointmentName());
         System.out.println("Data do agendamento:" + appointment.getDate());
+        System.out.println("//////////////////////////////////////////////////////////");
+    }
+
+    public void printEstablishment(Establishment establishment){
+        System.out.println("Nome do estabelecimento: " + establishment.getName());
+        System.out.println("Dono do estabelecimento: " + establishment.getOwner());
         System.out.println("//////////////////////////////////////////////////////////");
     }
 
@@ -165,5 +215,21 @@ public class View{
 
     public void dateUnavaliable(){
         System.out.println("Horario indisponivel");
+    }
+
+    public void establishmentCreated(){
+        System.out.println("Estabelecimento criado com sucesso");
+    }
+
+    public void establishmentNameUpdated(){
+        System.out.println("Nome atualizado com sucesso");
+    }
+
+    public void establishmentDeleted(){
+        System.out.println("Estabelecimento deletado com sucesso");
+    }
+
+    public void establishmentNotFound(){
+        System.out.println("Estabelecimento nao encontrado");
     }
 }

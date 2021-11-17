@@ -23,7 +23,7 @@ public class AppointmentsController {
             }
         }
        
-        Appointment appointment = new Appointment(appointments.size() + 1, userName, appointmentName, date);
+        Appointment appointment = new Appointment(userName, appointmentName, date);
         
         appointments.add(appointment);
 
