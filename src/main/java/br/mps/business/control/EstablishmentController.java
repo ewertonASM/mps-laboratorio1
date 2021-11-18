@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import br.mps.view.View;
 import br.mps.business.model.Establishment;
+import br.mps.infra.exceptions.BadRequestException;
 
 public class EstablishmentController {
     ArrayList<Establishment> establishments;
@@ -37,7 +38,7 @@ public class EstablishmentController {
             }
         }
 
-        view.establishmentNotFound();
+        throw new BadRequestException("Estabelecimento nao encontrado");
     }
 
     public void deleteEstablishment(String name){
@@ -49,7 +50,7 @@ public class EstablishmentController {
             }
         }
 
-        view.establishmentNotFound();
+        throw new BadRequestException("Estabelecimento nao encontrado");
     }
 
     private boolean checkName(String name1, String name2){
