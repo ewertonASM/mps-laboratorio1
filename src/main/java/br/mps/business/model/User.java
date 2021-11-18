@@ -1,10 +1,11 @@
 package br.mps.business.model;
 
-public class User{
+public class User implements Comparable<User> {
     private String login;
     private String senha;
 
     public User(String login, String senha){
+        super();
         this.login = login;
         this.senha = senha;
     }
@@ -15,5 +16,9 @@ public class User{
 
     public String getSenha(){
         return senha;
+    }
+
+    public int compareTo(User user) {
+        return login.compareTo(user.login);
     }
 } 
