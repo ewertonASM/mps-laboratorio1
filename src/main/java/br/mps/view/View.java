@@ -3,6 +3,10 @@ package br.mps.view;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import br.mps.business.model.User;
 
 import br.mps.business.control.UserController;
 
@@ -13,7 +17,7 @@ public class View{
 
     public void run() {
         Scanner scan = new Scanner(System.in);
-        Map<String,String> users = new HashMap<String,String>();
+        SortedMap<User, Integer> users = new TreeMap<User, Integer>();
 
         UserController controller = new UserController(users, this);
 
@@ -30,9 +34,10 @@ public class View{
                     break;
                 case "2":
                     System.out.print("Lista de usuarios:\n");
-                    for (String nome : users.keySet()) { 
-                        System.out.print(nome + "\n"); 
+                    for (User user : users.keySet()) {
+                        System.out.println(user.getLogin());
                     }
+
                     num = scan.nextLine();
                     break;
                 case "3":

@@ -4,16 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.Scanner;
+import java.util.SortedMap;
 
 import br.mps.business.model.User;
 import br.mps.infra.Validator;
 import br.mps.view.View;
 
 public class UserController{
-    Map<String,String> users;
+    SortedMap<User, Integer> users;
     View view;
 
-    public UserController(Map<String,String> users, View view){
+    public UserController(SortedMap<User, Integer> users, View view){
         this.users = users;
         this.view = view;
     }
@@ -40,27 +41,25 @@ public class UserController{
             return;
         }
           
-        users.put(login, new String(senha));
+        User user = new User(login, senha);
 
+        users.put(user, users.size());
 
         view.userCriado();
     }
 
-    public void deleteUser(Map<String, String> userList, String name){
-        String user = userList.get(name);
-        
+    public void deleteUser(SortedMap<User, Integer> userList, String name){
+        User user = null;
+
+        for (SortedMap.Entry<User, Integer> entry : userList.entrySet()) {
+            if (entry.getKey().getLogin().equals(name)) {
+                user = entry.getKey();
+            }
+        }
+
         if (user != null) {
-            userList.remove(name);
+            userList.remove(user);
             view.userDeletado();
         }
     }
-
-    // public void deleteUser(Map<String, String> userList, String name){
-    //     String user = userList.get(name);
-        
-    //     if (user != null) {
-    //         userList.remove(name);
-    //         System.out.println("Usuario deletado com sucesso");
-    //     }
-    // }
 }
