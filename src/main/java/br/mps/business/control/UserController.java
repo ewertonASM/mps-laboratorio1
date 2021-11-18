@@ -19,7 +19,7 @@ public class UserController{
         this.view = view;
     }
 
-    public void createUser(){
+    public void createUser() throws Exception {
         Validator validator;
 
         Scanner scan = new Scanner(System.in);
@@ -40,7 +40,14 @@ public class UserController{
             view.senhaInvalida();
             return;
         }
-          
+        
+        for (SortedMap.Entry<User, Integer> entry : users.entrySet()) {
+            if (entry.getKey().getLogin().equals(login)) {
+                Exception error = new Exception("Usuário já existe");
+                throw error;
+            }
+        }
+
         User user = new User(login, senha);
 
         users.put(user, users.size());

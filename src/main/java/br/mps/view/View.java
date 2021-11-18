@@ -29,7 +29,11 @@ public class View{
                 case "0":
                     System.exit(0);
                 case "1":
-                    controller.createUser();
+                    try {
+                        controller.createUser();
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
                     num = scan.nextLine();
                     break;
                 case "2":
