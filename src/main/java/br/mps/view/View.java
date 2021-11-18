@@ -1,20 +1,10 @@
 package br.mps.view;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import br.mps.business.model.User;
-
-import java.util.ArrayList;
 import java.time.LocalDate;
 
-import br.mps.business.control.UserController;
-import br.mps.business.control.AppointmentsController;
-import br.mps.business.control.EstablishmentController;
+import br.mps.business.control.SingletonFacade;
 import br.mps.business.model.Appointment;
 import br.mps.business.model.Establishment;
 
@@ -25,13 +15,8 @@ public class View{
 
     public void run() {
         Scanner scan = new Scanner(System.in);
-        SortedMap<User, Integer> users = new TreeMap<User, Integer>();
-        ArrayList<Appointment> appointments = new ArrayList<Appointment>();
-        ArrayList<Establishment> establishments = new ArrayList<Establishment>();
-
-        UserController controller = new UserController(users, this);
-        AppointmentsController aptController = new AppointmentsController(appointments, this);
-        EstablishmentController estController = new EstablishmentController(establishments, this);
+        
+        SingletonFacade singletonFacade = new SingletonFacade(this);
         
         menu();
         String num = scan.nextLine();
@@ -41,33 +26,26 @@ public class View{
                 case "0":
                     System.exit(0);
                 case "1":
-                    try {
-                        controller.createUser();
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
+                    singletonFacade.createUser();
                     num = scan.nextLine();
                     break;
                 case "2":
                     System.out.print("Lista de usuarios:\n");
-                    for (User user : users.keySet()) {
-                        System.out.println(user.getLogin());
-                    }
-
+                    singletonFacade.listUsers();
                     num = scan.nextLine();
                     break;
                 case "3":
                     System.out.println("Digite o nome do usuário a ser deletado: ");
                     String name = scan.nextLine();
-                    controller.deleteUser(users, name);
+                    singletonFacade.deleteUser(name);
                     num = scan.nextLine();
                     break;
                 case "4":
-                    criarAgendamento(aptController, scan);
+                    criarAgendamento(singletonFacade, scan);
                     num = scan.nextLine();
                     break;
                 case "5":
-                    aptController.listAppointments();
+                    singletonFacade.listAppointments();
                     num = scan.nextLine();
                     break;
                 case "6":
@@ -75,31 +53,31 @@ public class View{
                     LocalDate oldDate = perguntaData(scan);
                     System.out.println("Digite a nova data do agendamento");
                     LocalDate newDate = perguntaData(scan);
-                    aptController.updateAppointment(oldDate, newDate);
+                    singletonFacade.updateAppointment(oldDate, newDate);
                     num = scan.nextLine();
                     break;
                 case "7":
                     System.out.println("Digite a data que deseja excluir o agendamento");
                     LocalDate date = perguntaData(scan);
-                    aptController.deleteAppointment(date);
+                    singletonFacade.deleteAppointment(date);
                     num = scan.nextLine();
                     break;
                 case "8":
-                    cadastrarEstabelecimento(estController, scan);
+                    cadastrarEstabelecimento(singletonFacade, scan);
                     num = scan.nextLine();
                     break;
                 case "9":
-                    estController.listEstablishments();
+                    singletonFacade.listEstablishments();
                     num = scan.nextLine();
                     break;
                 case "10":
-                    atualizaNome(estController, scan);
+                    atualizaNome(singletonFacade, scan);
                     num = scan.nextLine();
                     break;
                 case "11":
                     System.out.println("Digite o nome do estabelecimento que voce deseja deletar");
                     String n = scan.nextLine();
-                    estController.deleteEstablishment(n);
+                    singletonFacade.deleteEstablishment(n);
                     num = scan.nextLine();
                     break;
                 default:
@@ -119,14 +97,14 @@ public class View{
         System.out.println("Digite 4 para criar novo agendamento");
         System.out.println("Digite 5 para listar agendamentos");
         System.out.println("Digite 6 para alterar a data de um agendamento");
-        System.out.println("Digite 7 para deletar os agendamento");
+        System.out.println("Digite 7 para deletar o agendamento");
         System.out.println("Digite 8 para cadastrar um estabelecimento");
         System.out.println("Digite 9 para listar os estabelecimentos");
         System.out.println("Digite 10 para alterar o nome de um estabelecimento");
         System.out.println("Digite 11 para deletar um estabelecimento");
     }
 
-    public void criarAgendamento(AppointmentsController aptController, Scanner scan){
+    public void criarAgendamento(SingletonFacade singletonFacade, Scanner scan){
 
         System.out.println("Digite o nome do usuario que quer criar o agendamento");
         String name = scan.nextLine();
@@ -136,10 +114,10 @@ public class View{
 
         LocalDate date = perguntaData(scan);
 
-        aptController.createAppointment(name, appointmentName, date);
+        singletonFacade.createAppointment(name, appointmentName, date);
     }
 
-    public void cadastrarEstabelecimento(EstablishmentController estController, Scanner scan){
+    public void cadastrarEstabelecimento(SingletonFacade singletonFacade, Scanner scan){
 
         System.out.println("Digite o nome do estabelecimento");
         String name = scan.nextLine();
@@ -147,7 +125,7 @@ public class View{
         System.out.println("Digite o nome do dono do estabelecimento");
         String owner = scan.nextLine();
 
-        estController.createEstablishment(name, owner);
+        singletonFacade.createEstablishment(name, owner);
     }
 
     public LocalDate perguntaData(Scanner scan){
@@ -159,20 +137,20 @@ public class View{
 
         System.out.println("Digite o ano do agendamento");
         String year = scan.nextLine();
-
+        
         LocalDate date = LocalDate.parse(year + "-" + month + "-" + day);
-
+    
         return date;
     }
 
-    public void atualizaNome(EstablishmentController estController, Scanner scan){
+    public void atualizaNome(SingletonFacade singletonFacade, Scanner scan){
         System.out.println("Digite o nome atual do estabelecimento");
         String oldName = scan.nextLine();
         
         System.out.println("Digite o novo nome do estabelecimento");
         String newName = scan.nextLine();
 
-        estController.changeName(oldName, newName);
+        singletonFacade.changeName(oldName, newName);
     }
 
     public void printAppointment(Appointment appointment){
@@ -192,16 +170,8 @@ public class View{
         System.out.println("Digite o login do novo usuario:");
     }
 
-    public void loginInvalido(){
-        System.out.println("Login invalido!");
-    }
-
     public void perguntaSenha(){
         System.out.println("Digite a senha do novo usuario:");
-    }
-
-    public void senhaInvalida(){
-        System.out.println("Senha invalida!");
     }
 
     public void userCriado(){
@@ -216,16 +186,8 @@ public class View{
         System.out.println("Agendamento realizado com sucesso");
     }
 
-    public void appointmentNotFound(){
-        System.out.println("Agendamento nao encontrado");
-    }
-
     public void appointmentDeleted(){
-        System.out.println("Agendamento deletado");
-    }
-
-    public void dateUnavaliable(){
-        System.out.println("Horario indisponivel");
+        System.out.println("Agendamento deletado com sucesso");
     }
 
     public void establishmentCreated(){
@@ -238,9 +200,5 @@ public class View{
 
     public void establishmentDeleted(){
         System.out.println("Estabelecimento deletado com sucesso");
-    }
-
-    public void establishmentNotFound(){
-        System.out.println("Estabelecimento nao encontrado");
     }
 }
