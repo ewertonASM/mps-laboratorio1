@@ -8,6 +8,7 @@ import java.util.SortedMap;
 
 import br.mps.business.model.User;
 import br.mps.infra.Validator;
+import br.mps.infra.exceptions.BadRequestException;
 import br.mps.view.View;
 
 public class UserController{
@@ -29,22 +30,19 @@ public class UserController{
         String login = scan.nextLine();
         
         if(!validator.validaLogin(login)){
-            view.loginInvalido();
-            return;
+           throw new BadRequestException("Login Invalido!");
         }
 
         view.perguntaSenha();
         String senha = scan.nextLine();
 
         if(!validator.validaSenha(senha)){
-            view.senhaInvalida();
-            return;
+           throw new BadRequestException("Login Invalido!");
         }
         
         for (SortedMap.Entry<User, Integer> entry : users.entrySet()) {
             if (entry.getKey().getLogin().equals(login)) {
-                Exception error = new Exception("Usuário já existe");
-                throw error;
+                throw new BadRequestException("Login já existe");
             }
         }
 
