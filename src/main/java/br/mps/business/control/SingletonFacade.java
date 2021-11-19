@@ -2,8 +2,10 @@ package br.mps.business.control;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Set;
 
 import br.mps.view.View;
 import br.mps.business.control.UserController;
@@ -20,17 +22,17 @@ public class SingletonFacade {
     AppointmentsController aptController;
     EstablishmentController estController;
 
-    SortedMap<User, Integer> users;
+    Set<User> users;
     ArrayList<Appointment> appointments;
     ArrayList<Establishment> establishments;
 
     public SingletonFacade(View view){
         this.view = view;
-        this.users = new TreeMap<User, Integer>();
+        this.users = new TreeSet<User>();
         this.appointments = new ArrayList<Appointment>();
         this.establishments = new ArrayList<Establishment>();
 
-        this.userController =  new UserController(users, view);
+        this.userController = new UserController(users, view);
         this.aptController = new AppointmentsController(appointments, view);
         this.estController = new EstablishmentController(establishments, view);
 

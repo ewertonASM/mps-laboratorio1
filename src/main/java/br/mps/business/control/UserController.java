@@ -1,6 +1,7 @@
 package br.mps.business.control;
 
 import java.util.Scanner;
+import java.util.Set;
 import java.util.SortedMap;
 
 import br.mps.business.model.User;
@@ -9,10 +10,10 @@ import br.mps.infra.exceptions.BadRequestException;
 import br.mps.view.View;
 
 public class UserController{
-    SortedMap<User, Integer> users;
+    Set<User> users;
     View view;
 
-    public UserController(SortedMap<User, Integer> users, View view){
+    public UserController(Set<User> users, View view){
         this.users = users;
         this.view = view;
     }
@@ -37,31 +38,31 @@ public class UserController{
            throw new BadRequestException("Senha Invalida!");
         }
         
-        for (SortedMap.Entry<User, Integer> entry : users.entrySet()) {
-            if (entry.getKey().getLogin().equals(login)) {
+        for (User user : users) {
+            if (user.getLogin().equals(login)) {
                 throw new BadRequestException("Login já existe");
             }
         }
 
         User user = new User(login, senha);
 
-        users.put(user, users.size());
+        users.add(user);
 
         view.userCriado();
     }
 
     public void listUsers(){
-        for (User user : users.keySet()) {
+        for (User user : users) {
             System.out.println(user.getLogin());
         }
     }
 
-    public void deleteUser(SortedMap<User, Integer> userList, String name){
+    public void deleteUser(Set<User> userList, String name){
         User user = null;
 
-        for (SortedMap.Entry<User, Integer> entry : userList.entrySet()) {
-            if (entry.getKey().getLogin().equals(name)) {
-                user = entry.getKey();
+        for (User userIter : users) {
+            if (userIter.getLogin().equals(name)) {
+                user = userIter;
             }
         }
 
