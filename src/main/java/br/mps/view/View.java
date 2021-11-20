@@ -80,6 +80,10 @@ public class View{
                     singletonFacade.deleteEstablishment(n);
                     num = scan.nextLine();
                     break;
+                case "12":
+                    singletonFacade.listUsersData();
+                    num = scan.nextLine();
+                    break;
                 default:
                     System.out.println("Comando invalido, tente novamente");
                     menu();
@@ -102,6 +106,7 @@ public class View{
         System.out.println("Digite 9 para listar os estabelecimentos");
         System.out.println("Digite 10 para alterar o nome de um estabelecimento");
         System.out.println("Digite 11 para deletar um estabelecimento");
+        System.out.println("Digite 12 para listar os usuarios pela data de nascimento em ordem decrescente");
     }
 
     public void criarAgendamento(SingletonFacade singletonFacade, Scanner scan){
@@ -126,6 +131,18 @@ public class View{
         String owner = scan.nextLine();
 
         singletonFacade.createEstablishment(name, owner);
+    }
+
+    public void perguntaAnoNascimento(){
+        System.out.println("Digite o ano de nascimento:");
+    }
+
+    public void perguntaMesNascimento(){
+        System.out.println("Digite o mes de nascimento:");
+    }
+
+    public void perguntaDiaNascimento(){
+        System.out.println("Digite o dia de nascimento:");
     }
 
     public LocalDate perguntaData(Scanner scan){

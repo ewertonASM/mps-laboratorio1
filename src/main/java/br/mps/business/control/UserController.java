@@ -3,11 +3,15 @@ package br.mps.business.control;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.Collections;
+import java.util.TreeSet;
 
 import br.mps.business.model.User;
 import br.mps.infra.Validator;
 import br.mps.infra.exceptions.BadRequestException;
 import br.mps.view.View;
+import br.mps.business.model.ComparadorData;
+import br.mps.business.model.Data;
 
 public class UserController{
     Set<User> users;
@@ -44,7 +48,28 @@ public class UserController{
             }
         }
 
-        User user = new User(login, senha);
+        view.perguntaAnoNascimento();
+        int ano = Integer.parseInt(scan.nextLine());
+
+        if(!validator.validaAnoNascimento(ano)){
+            throw new BadRequestException("Ano Invalido!");
+         }
+
+        view.perguntaMesNascimento();
+        int mes = Integer.parseInt(scan.nextLine());
+
+        if(!validator.validaMesNascimento(mes)){
+            throw new BadRequestException("Mes Invalido!");
+         }
+
+        view.perguntaDiaNascimento();
+        int dia = Integer.parseInt(scan.nextLine());
+
+        if(!validator.validaDiaNascimento(dia,mes)){
+            throw new BadRequestException("Dia Invalido!");
+         }
+
+        User user = new User(login, senha, dia, mes, ano);
 
         users.add(user);
 
@@ -55,6 +80,23 @@ public class UserController{
         for (User user : users) {
             System.out.println(user.getLogin());
         }
+    }
+
+    public void listUsersData(){
+        Set<User> test_data = new TreeSet<User>(new ComparadorData());
+        
+        for (User user : users) {
+            test_data.add(user);
+        }
+
+        String data_string = "";
+        for (User user : test_data) {
+            System.out.print(user.getLogin());
+            data_string = user.getDataNascimento();
+            System.out.println(data_string);
+        }
+        
+
     }
 
     public void deleteUser(Set<User> userList, String name){
