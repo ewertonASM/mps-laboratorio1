@@ -15,6 +15,7 @@ import br.mps.business.model.User;
 import br.mps.business.model.Appointment;
 import br.mps.business.model.Establishment;
 
+
 public class SingletonFacade {
     View view;
 
@@ -49,6 +50,11 @@ public class SingletonFacade {
     public void listUsers(){
         userController.listUsers();
     }
+
+    public void listUsersData(){
+        userController.listUsersData();
+    }
+
 
     public void deleteUser(String name){
         userController.deleteUser(users, name);
