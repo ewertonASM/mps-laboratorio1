@@ -74,8 +74,4 @@ public class AppointmentsController {
             return false;
         }
     }
-
-    public void checkDate(int day, int month, int year){
-        
-    }
 }

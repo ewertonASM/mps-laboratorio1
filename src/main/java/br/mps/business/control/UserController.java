@@ -2,16 +2,16 @@ package br.mps.business.control;
 
 import java.util.Scanner;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.Collections;
 import java.util.TreeSet;
 
 import br.mps.business.model.User;
+import br.mps.infra.DataValidator;
+import br.mps.infra.LoginValidator;
 import br.mps.infra.Validator;
+import br.mps.infra.ValidatorController;
 import br.mps.infra.exceptions.BadRequestException;
 import br.mps.view.View;
 import br.mps.business.model.ComparadorData;
-import br.mps.business.model.Data;
 
 public class UserController{
     Set<User> users;
@@ -23,22 +23,21 @@ public class UserController{
     }
 
     public void createUser() throws Exception {
-        Validator validator;
+        Validator validator = new ValidatorController();
 
         Scanner scan = new Scanner(System.in);
-        validator = new Validator();
 
         view.perguntaLogin();
         String login = scan.nextLine();
         
-        if(!validator.validaLogin(login)){
+        if(!validator.validateString(1, login)){
            throw new BadRequestException("Login Invalido!");
         }
 
         view.perguntaSenha();
         String senha = scan.nextLine();
 
-        if(!validator.validaSenha(senha)){
+        if(!validator.validateString(2, senha)){
            throw new BadRequestException("Senha Invalida!");
         }
         
@@ -51,22 +50,14 @@ public class UserController{
         view.perguntaAnoNascimento();
         int ano = Integer.parseInt(scan.nextLine());
 
-        if(!validator.validaAnoNascimento(ano)){
-            throw new BadRequestException("Ano Invalido!");
-         }
-
         view.perguntaMesNascimento();
         int mes = Integer.parseInt(scan.nextLine());
-
-        if(!validator.validaMesNascimento(mes)){
-            throw new BadRequestException("Mes Invalido!");
-         }
 
         view.perguntaDiaNascimento();
         int dia = Integer.parseInt(scan.nextLine());
 
-        if(!validator.validaDiaNascimento(dia,mes)){
-            throw new BadRequestException("Dia Invalido!");
+        if(!validator.validateInt(dia, mes, ano)){
+            throw new BadRequestException("Data Invalida!");
          }
 
         User user = new User(login, senha, dia, mes, ano);
@@ -95,8 +86,6 @@ public class UserController{
             data_string = user.getDataNascimento();
             System.out.println(data_string);
         }
-        
-
     }
 
     public void deleteUser(Set<User> userList, String name){
@@ -111,6 +100,8 @@ public class UserController{
         if (user != null) {
             userList.remove(user);
             view.userDeletado();
+        } else{
+            throw new BadRequestException("Usuario nao encontrado!");
         }
     }
 }
