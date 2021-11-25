@@ -12,6 +12,7 @@ import br.mps.infra.ValidatorController;
 import br.mps.infra.exceptions.BadRequestException;
 import br.mps.view.View;
 import br.mps.business.model.ComparadorData;
+import br.mps.business.model.ListUsersDate;
 
 public class UserController{
     Set<User> users;
@@ -68,24 +69,17 @@ public class UserController{
     }
 
     public void listUsers(){
-        for (User user : users) {
-            System.out.println(user.getLogin());
-        }
+        ListUsersController listUsersController = new ListUsersController(null, users);
+        
+        listUsersController.listUsersName(users);
     }
 
     public void listUsersData(){
-        Set<User> test_data = new TreeSet<User>(new ComparadorData());
+        ListUsersDate listUsersDate = new ListUsersDate();
         
-        for (User user : users) {
-            test_data.add(user);
-        }
-
-        String data_string = "";
-        for (User user : test_data) {
-            System.out.print(user.getLogin());
-            data_string = user.getDataNascimento();
-            System.out.println(data_string);
-        }
+        ListUsersController listUsersController = new ListUsersController(listUsersDate, users);
+        
+        listUsersController.listUsersByDate();
     }
 
     public void deleteUser(Set<User> userList, String name){
