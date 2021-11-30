@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import br.mps.view.View;
 import br.mps.business.model.Appointment;
+import br.mps.infra.exceptions.BadRequestException;
 
 public class AppointmentsController {
     ArrayList<Appointment> appointments;
@@ -18,8 +19,7 @@ public class AppointmentsController {
         
         for(Appointment appointment : appointments){
             if(checkDate(date, appointment.getDate())){
-                view.dateUnavaliable();
-                return;
+                throw new BadRequestException("Data indisponivel");
             }
         }
        
@@ -37,10 +37,20 @@ public class AppointmentsController {
     }
 
     public void updateAppointment(LocalDate oldDate, LocalDate newDate){
+        Appointment apt = null;
+
         for(Appointment appointment : appointments){
-            if(checkDate(oldDate, appointment.getDate())){
-                appointment.changeDate(newDate);
+            if(checkDate(newDate, appointment.getDate())){
+                throw new BadRequestException("Data indisponivel");
+            } else if(checkDate(oldDate, appointment.getDate())){
+                apt = appointment;
             }
+        }
+
+        if (apt == null){
+            throw new BadRequestException("Agendamento nao encontrado");
+        } else{
+            apt.changeDate(newDate);
         }
     }
 
@@ -54,7 +64,7 @@ public class AppointmentsController {
             }
         }
 
-        view.appointmentNotFound();
+        throw new BadRequestException("Agendamento nao encontrado");
     }
 
     private boolean checkDate(LocalDate date1, LocalDate date2){
