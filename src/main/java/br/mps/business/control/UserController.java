@@ -1,8 +1,5 @@
 package br.mps.business.control;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.Scanner;
 import java.util.SortedMap;
 
@@ -54,17 +51,35 @@ public class UserController{
     }
 
     public void deleteUser(SortedMap<User, Integer> userList, String name){
-        User user = null;
+        
+        User user = findUser(userList, name);
+        
+        if (user != null) {
+            userList.remove(user);
+            view.userDeletado();
+        }
+    }
 
+    public void signIn(SortedMap<User, Integer> userList, String name, String password){
+        
+        User user = findUser(userList, name);
+        
+        if (user != null && user.getSenha().equals(password)) {
+            view.signInSuccess();
+        }else{
+            throw new BadRequestException("Credenciais Invalidas");
+        }
+    }
+    
+    public User findUser(SortedMap<User, Integer> userList, String name){
+
+        User user = null;
+        
         for (SortedMap.Entry<User, Integer> entry : userList.entrySet()) {
             if (entry.getKey().getLogin().equals(name)) {
                 user = entry.getKey();
             }
         }
-
-        if (user != null) {
-            userList.remove(user);
-            view.userDeletado();
-        }
+        return user;
     }
 }

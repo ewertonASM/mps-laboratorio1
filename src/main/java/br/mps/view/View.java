@@ -1,22 +1,18 @@
 package br.mps.view;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
-
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import br.mps.business.model.User;
-
-import java.util.ArrayList;
-import java.time.LocalDate;
-
-import br.mps.business.control.UserController;
 import br.mps.business.control.AppointmentsController;
 import br.mps.business.control.EstablishmentController;
+import br.mps.business.control.UserController;
 import br.mps.business.model.Appointment;
 import br.mps.business.model.Establishment;
+import br.mps.business.model.User;
+import br.mps.infra.ReportGenerator;
 
 public class View{
     public View(){
@@ -124,6 +120,7 @@ public class View{
         System.out.println("Digite 9 para listar os estabelecimentos");
         System.out.println("Digite 10 para alterar o nome de um estabelecimento");
         System.out.println("Digite 11 para deletar um estabelecimento");
+        System.out.println("Digite 12 para gerar relatório");
     }
 
     public void criarAgendamento(AppointmentsController aptController, Scanner scan){
@@ -173,6 +170,18 @@ public class View{
         String newName = scan.nextLine();
 
         estController.changeName(oldName, newName);
+    }
+
+    public void geraPdf(){
+        
+        ReportGenerator reportGenerator = new ReportGenerator();
+        
+        System.out.println("Gerando PDF...");
+
+        
+
+
+        // estController.changeName(oldName, newName);
     }
 
     public void printAppointment(Appointment appointment){
@@ -242,5 +251,9 @@ public class View{
 
     public void establishmentNotFound(){
         System.out.println("Estabelecimento nao encontrado");
+    }
+
+    public void signInSuccess(){
+        System.out.println("Login efetuado com sucesso");
     }
 }
