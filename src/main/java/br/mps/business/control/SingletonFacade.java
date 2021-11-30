@@ -15,7 +15,6 @@ import br.mps.business.model.User;
 import br.mps.business.model.Appointment;
 import br.mps.business.model.Establishment;
 
-
 public class SingletonFacade {
     View view;
 
@@ -27,7 +26,7 @@ public class SingletonFacade {
     ArrayList<Appointment> appointments;
     ArrayList<Establishment> establishments;
 
-    public SingletonFacade(View view){
+    public SingletonFacade(View view) {
         this.view = view;
         this.users = new TreeSet<User>();
         this.appointments = new ArrayList<Appointment>();
@@ -39,7 +38,7 @@ public class SingletonFacade {
 
     }
 
-    public void createUser(){
+    public void createUser() {
         try {
             userController.createUser();
         } catch (Exception e) {
@@ -47,48 +46,55 @@ public class SingletonFacade {
         }
     }
 
-    public void listUsers(){
+    public void listUsers() {
         userController.listUsers();
     }
 
-    public void listUsersData(){
+    public void listUsersData() {
         userController.listUsersData();
     }
 
-
-    public void deleteUser(String name){
+    public void deleteUser(String name) {
         userController.deleteUser(users, name);
     }
 
-    public void createAppointment(String name, String appointmentName, LocalDate date){
+    public void createAppointment(String name, String appointmentName, LocalDate date) {
         aptController.createAppointment(name, appointmentName, date);
     }
 
-    public void listAppointments(){
+    public void listAppointments() {
         aptController.listAppointments();
     }
 
-    public void updateAppointment(LocalDate oldDate, LocalDate newDate){
+    public void updateAppointment(LocalDate oldDate, LocalDate newDate) {
         aptController.updateAppointment(oldDate, newDate);
     }
 
-    public void deleteAppointment(LocalDate date){
+    public void deleteAppointment(LocalDate date) {
         aptController.deleteAppointment(date);
     }
 
-    public void createEstablishment(String name, String owner){
+    public void createEstablishment(String name, String owner) {
         estController.createEstablishment(name, owner);
     }
 
-    public void listEstablishments(){
+    public void listEstablishments() {
         estController.listEstablishments();
     }
 
-    public void changeName(String oldName, String newName){
+    public void changeName(String oldName, String newName) {
         estController.changeName(oldName, newName);
     }
 
-    public void deleteEstablishment(String name){
+    public Establishment searchEstablishment(String oldName) {
+        return estController.searchEstablishment(oldName);
+    }
+
+    public void deleteEstablishment(String name) {
         estController.deleteEstablishment(name);
+    }
+
+    public void undoName(String name) {
+        estController.undo(name);
     }
 }

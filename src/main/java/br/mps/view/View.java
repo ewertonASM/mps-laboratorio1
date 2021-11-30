@@ -14,26 +14,28 @@ import java.util.Scanner;
 import java.time.LocalDate;
 
 import br.mps.business.control.SingletonFacade;
+import br.mps.business.control.memento.CareTaker;
 import br.mps.business.model.Appointment;
 import br.mps.business.model.Establishment;
 import br.mps.business.model.User;
 import br.mps.infra.ReportGenerator;
+import br.mps.infra.exceptions.BadRequestException;
 
-public class View{
-    public View(){
+public class View {
+    public View() {
 
     }
 
     public void run() {
         Scanner scan = new Scanner(System.in);
-        
+
         SingletonFacade singletonFacade = new SingletonFacade(this);
-        
+
         menu();
         String num = scan.nextLine();
-       
-        while(true){
-            switch (num){
+
+        while (true) {
+            switch (num) {
                 case "0":
                     System.exit(0);
                 case "1":
@@ -95,6 +97,10 @@ public class View{
                     singletonFacade.listUsersData();
                     num = scan.nextLine();
                     break;
+                case "13":
+                    reverterNome(singletonFacade, scan);
+                    num = scan.nextLine();
+                    break;
                 default:
                     System.out.println("Comando invalido, tente novamente");
                     menu();
@@ -104,7 +110,7 @@ public class View{
         }
     }
 
-    public void menu(){
+    public void menu() {
         System.out.println("Digite 0 para sair");
         System.out.println("Digite 1 para criar um novo usuario");
         System.out.println("Digite 2 para listar os usuarios");
@@ -118,9 +124,11 @@ public class View{
         System.out.println("Digite 10 para alterar o nome de um estabelecimento");
         System.out.println("Digite 11 para deletar um estabelecimento");
         System.out.println("Digite 12 para listar os usuarios pela data de nascimento em ordem decrescente");
+        System.out.println("Digite 13 para restaurar o nome de um estabelecimento");
+
     }
 
-    public void criarAgendamento(SingletonFacade singletonFacade, Scanner scan){
+    public void criarAgendamento(SingletonFacade singletonFacade, Scanner scan) {
 
         System.out.println("Digite o nome do usuario que quer criar o agendamento");
         String name = scan.nextLine();
@@ -133,7 +141,7 @@ public class View{
         singletonFacade.createAppointment(name, appointmentName, date);
     }
 
-    public void cadastrarEstabelecimento(SingletonFacade singletonFacade, Scanner scan){
+    public void cadastrarEstabelecimento(SingletonFacade singletonFacade, Scanner scan) {
 
         System.out.println("Digite o nome do estabelecimento");
         String name = scan.nextLine();
@@ -144,19 +152,19 @@ public class View{
         singletonFacade.createEstablishment(name, owner);
     }
 
-    public void perguntaAnoNascimento(){
+    public void perguntaAnoNascimento() {
         System.out.println("Digite o ano de nascimento:");
     }
 
-    public void perguntaMesNascimento(){
+    public void perguntaMesNascimento() {
         System.out.println("Digite o mes de nascimento:");
     }
 
-    public void perguntaDiaNascimento(){
+    public void perguntaDiaNascimento() {
         System.out.println("Digite o dia de nascimento:");
     }
 
-    public LocalDate perguntaData(Scanner scan){
+    public LocalDate perguntaData(Scanner scan) {
         System.out.println("Digite o dia do agendamento");
         String day = scan.nextLine();
 
@@ -165,20 +173,38 @@ public class View{
 
         System.out.println("Digite o ano do agendamento");
         String year = scan.nextLine();
-        
+
         LocalDate date = LocalDate.parse(year + "-" + month + "-" + day);
-    
+
         return date;
     }
 
-    public void atualizaNome(SingletonFacade singletonFacade, Scanner scan){
+    public void atualizaNome(SingletonFacade singletonFacade, Scanner scan) {
+
         System.out.println("Digite o nome atual do estabelecimento");
         String oldName = scan.nextLine();
-        
+
         System.out.println("Digite o novo nome do estabelecimento");
         String newName = scan.nextLine();
 
-        singletonFacade.changeName(oldName, newName);
+        try {
+            Establishment estabelishment;
+            estabelishment = singletonFacade.searchEstablishment(oldName);
+            CareTaker Caretaker = new CareTaker(estabelishment);
+            Caretaker.backup();
+            singletonFacade.changeName(oldName, newName);
+        } catch (BadRequestException error) {
+        }
+    }
+
+    public void reverterNome(SingletonFacade singletonFacade, Scanner scan) {
+        System.out.println("Insira o nome do estabelecimento a ser restaurado:");
+        String name = scan.nextLine();
+
+        try {
+            singletonFacade.undoName(name);
+        } catch (BadRequestException error) {
+        }
     }
 
     public void geraPdf(){
@@ -200,45 +226,45 @@ public class View{
         System.out.println("//////////////////////////////////////////////////////////");
     }
 
-    public void printEstablishment(Establishment establishment){
+    public void printEstablishment(Establishment establishment) {
         System.out.println("Nome do estabelecimento: " + establishment.getName());
         System.out.println("Dono do estabelecimento: " + establishment.getOwner());
         System.out.println("//////////////////////////////////////////////////////////");
     }
 
-    public void perguntaLogin(){
+    public void perguntaLogin() {
         System.out.println("Digite o login do novo usuario:");
     }
 
-    public void perguntaSenha(){
+    public void perguntaSenha() {
         System.out.println("Digite a senha do novo usuario:");
     }
 
-    public void userCriado(){
+    public void userCriado() {
         System.out.println("Usuario criado com sucesso");
     }
 
-    public void userDeletado(){
+    public void userDeletado() {
         System.out.println("Usuario deletado com sucesso");
     }
 
-    public void appointmentCreated(){
+    public void appointmentCreated() {
         System.out.println("Agendamento realizado com sucesso");
     }
 
-    public void appointmentDeleted(){
+    public void appointmentDeleted() {
         System.out.println("Agendamento deletado com sucesso");
     }
 
-    public void establishmentCreated(){
+    public void establishmentCreated() {
         System.out.println("Estabelecimento criado com sucesso");
     }
 
-    public void establishmentNameUpdated(){
+    public void establishmentNameUpdated() {
         System.out.println("Nome atualizado com sucesso");
     }
 
-    public void establishmentDeleted(){
+    public void establishmentDeleted() {
         System.out.println("Estabelecimento deletado com sucesso");
     }
 
