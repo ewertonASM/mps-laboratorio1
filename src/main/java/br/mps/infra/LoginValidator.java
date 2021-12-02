@@ -21,7 +21,6 @@ public class LoginValidator {
     }
 
     public boolean validaSenha(String senha){
-        
         //senha entre 8 a 20 caracteres
         if(senha.length() >= 8 && senha.length() <= 20){
             

@@ -2,9 +2,12 @@ package br.mps.view;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.Scanner;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import org.bouncycastle.jcajce.provider.asymmetric.ec.SignatureSpi.ecCVCDSA;
 
 import br.mps.business.control.AppointmentsController;
 import br.mps.business.control.EstablishmentController;
@@ -21,11 +24,21 @@ import br.mps.business.model.User;
 import br.mps.infra.ReportGenerator;
 import br.mps.infra.exceptions.BadRequestException;
 
+import br.mps.business.model.Command;
+import br.mps.business.model.adicionarUsuarioCommand;
+import br.mps.business.model.deletarUsuarioCommand;
+
+import java.util.Stack;
+
+
 public class View {
+    
+
     public View() {
 
     }
 
+    
     public void run() {
         Scanner scan = new Scanner(System.in);
 
@@ -33,13 +46,16 @@ public class View {
 
         menu();
         String num = scan.nextLine();
-
+        Stack<Command> commandHistory = new Stack<>();
+        
+        
         while (true) {
             switch (num) {
                 case "0":
                     System.exit(0);
                 case "1":
-                    singletonFacade.createUser();
+                    Command commandCreate = new adicionarUsuarioCommand(singletonFacade);
+                    commandHistory = execute(commandCreate,commandHistory);
                     num = scan.nextLine();
                     break;
                 case "2":
@@ -50,7 +66,8 @@ public class View {
                 case "3":
                     System.out.println("Digite o nome do usuário a ser deletado: ");
                     String name = scan.nextLine();
-                    singletonFacade.deleteUser(name);
+                    Command commandDelete = new deletarUsuarioCommand(singletonFacade, name);
+                    commandHistory = execute(commandDelete,commandHistory);
                     num = scan.nextLine();
                     break;
                 case "4":
@@ -101,6 +118,20 @@ public class View {
                     reverterNome(singletonFacade, scan);
                     num = scan.nextLine();
                     break;
+   
+                case "14": 
+
+                    if (commandHistory.isEmpty()){
+                        throw new BadRequestException("Nao existe nenhuma ação para desfazer");
+                    }
+                    Command commandAux = commandHistory.pop();
+                    commandAux.undo();
+                    num = scan.nextLine();
+  
+                    break;
+                case "69":
+                    
+                    break;
                 default:
                     System.out.println("Comando invalido, tente novamente");
                     menu();
@@ -112,20 +143,20 @@ public class View {
 
     public void menu() {
         System.out.println("Digite 0 para sair");
-        System.out.println("Digite 1 para criar um novo usuario");
-        System.out.println("Digite 2 para listar os usuarios");
-        System.out.println("Digite 3 para deletar um usuario");
-        System.out.println("Digite 4 para criar novo agendamento");
+        System.out.println("Digite 1 para criar um novo usuario"); 
+        System.out.println("Digite 2 para listar os usuarios"); 
+        System.out.println("Digite 3 para deletar um usuario"); 
+        System.out.println("Digite 4 para criar novo agendamento"); 
         System.out.println("Digite 5 para listar agendamentos");
-        System.out.println("Digite 6 para alterar a data de um agendamento");
-        System.out.println("Digite 7 para deletar o agendamento");
+        System.out.println("Digite 6 para alterar a data de um agendamento"); 
+        System.out.println("Digite 7 para deletar o agendamento"); 
         System.out.println("Digite 8 para cadastrar um estabelecimento");
         System.out.println("Digite 9 para listar os estabelecimentos");
         System.out.println("Digite 10 para alterar o nome de um estabelecimento");
         System.out.println("Digite 11 para deletar um estabelecimento");
         System.out.println("Digite 12 para listar os usuarios pela data de nascimento em ordem decrescente");
         System.out.println("Digite 13 para restaurar o nome de um estabelecimento");
-
+        System.out.println("Digite 14 para restaurar a ultima alteração dos usuários");
     }
 
     public void criarAgendamento(SingletonFacade singletonFacade, Scanner scan) {
@@ -213,10 +244,6 @@ public class View {
         
         System.out.println("Gerando PDF...");
 
-        
-
-
-        // estController.changeName(oldName, newName);
     }
 
     public void printAppointment(Appointment appointment){
@@ -274,6 +301,15 @@ public class View {
 
     public void signInSuccess(){
         System.out.println("Login efetuado com sucesso");
+    }
+
+    public Stack<Command> execute (Command command, Stack<Command> history){
+        command.execute();
+        history.push(command);
+ 
+        
+        return history;
+
     }
 
 }

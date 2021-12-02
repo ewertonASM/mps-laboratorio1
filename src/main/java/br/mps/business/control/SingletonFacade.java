@@ -58,6 +58,10 @@ public class SingletonFacade {
         userController.deleteUser(users, name);
     }
 
+    public void restaurarUsuarios(Set<User> users) {
+        userController.restaurarUsuarios(users);
+    }
+
     public void createAppointment(String name, String appointmentName, LocalDate date) {
         aptController.createAppointment(name, appointmentName, date);
     }
@@ -97,4 +101,9 @@ public class SingletonFacade {
     public void undoName(String name) {
         estController.undo(name);
     }
+
+    public Set<User> getUsers(){
+        return userController.getUsers();
+    }
+
 }

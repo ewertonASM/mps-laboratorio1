@@ -19,11 +19,13 @@ public class UserController{
     View view;
 
     public UserController(Set<User> users, View view){
+
         this.users = users;
         this.view = view;
     }
 
     public void createUser() throws Exception {
+
         Validator validator = new ValidatorController();
 
         Scanner scan = new Scanner(System.in);
@@ -83,6 +85,7 @@ public class UserController{
     }
 
     public void deleteUser(Set<User> userList, String name){
+       
         User user = null;
 
         for (User userIter : users) {
@@ -97,5 +100,14 @@ public class UserController{
         } else{
             throw new BadRequestException("Usuario nao encontrado!");
         }
+    }
+
+    public void restaurarUsuarios(Set<User> users){
+        this.users = users;
+        System.out.println("Usuários restaurados com sucesso");
+    }
+
+    public Set<User> getUsers(){
+        return users;
     }
 }
